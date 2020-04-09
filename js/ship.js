@@ -3,18 +3,19 @@ class Ship {
     this.pos = new Vector(x, y);
     this.velocity = new Vector(0, 0);
     this.radius = radius;
-    this.angle = 0;
-    this.rotation = 0;
     this.rockets = [];
+    this.angle = 0;
+    this.steer = new Vector(0, 0);
     this.life = 100;
     this.isAccelerating = false;
     this.backColor = WHITE;
+    this.maxSpeed = SHIP_MAX_SPEED;
+    this.boostMaxSpeed = MAX_BOOST_SPEED;
   }
 
   Draw() {
     ctx.save();
     ctx.translate(this.pos.x, this.pos.y);
-    ctx.rotate(this.angle);
     ctx.beginPath();
     ctx.moveTo(-this.radius / 2, this.radius / 2);
     ctx.lineTo(this.radius / 2, this.radius / 2);
@@ -32,33 +33,61 @@ class Ship {
     if (this.isAccelerating) {
       this.Accelerate();
     }
-    this.Turn();
     this.pos.Add(this.velocity);
     this.SlowDown();
     this.CheckEdges();
   }
 
   CheckEdges() {
-    if (this.pos.y > canvas.height) {
-      this.pos.y = 0;
+    if (this.pos.x > frame.pos.x + frame.width) {
+      this.pos.x = frame.pos.x + frame.width;
     }
-    if (this.pos.y < 0) {
-      this.pos.y = canvas.height;
+    if (this.pos.x < frame.pos.x) {
+      this.pos.x = frame.pos.x;
     }
-    if (this.pos.x > canvas.width) {
-      this.pos.x = 0;
+    if (this.pos.y > frame.pos.y + frame.height) {
+      this.pos.y = frame.pos.y + frame.height;
     }
-    if (this.pos.x < 0) {
-      this.pos.x = canvas.width;
+    if (this.pos.y < frame.pos.y) {
+      this.pos.y = frame.pos.y;
     }
   }
 
+  SetAngle(angle) {
+    this.angle = angle;
+  }
+
+  Stop() {
+    this.steer.x = 0;
+    this.steer.y = 0;
+  }
+
+  SteerLeft() {
+    // this.SetAngle(-0.5 * Math.PI);
+    this.steer.x = -1;
+  }
+
+  SteerRight() {
+    // this.SetAngle(0.5 * Math.PI);
+    this.steer.x = 1;
+  }
+
+  Forward() {
+    // this.SetAngle(2 * Math.PI);
+    this.steer.y = -1;
+  }
+
+  Reverse() {
+    // this.SetAngle(Math.PI);
+    this.steer.y = 1;
+  }
+
   Force(a) {
-    let force = new Vector(0, 0);
-    force.FromAngle(this.angle + a, SHIP_ACC);
-    if (this.isBoosting && this.velocity.Magnitude() < MAX_BOOST_SPEED) {
+    let force = new Vector(this.steer.x, this.steer.y);
+    // force.FromAngle(this.angle + a, SHIP_ACC);
+    if (this.isBoosting && this.velocity.Magnitude() < this.boostMaxSpeed) {
       this.velocity.Add(force);
-    } else if (this.velocity.Magnitude() < MAX_SPEED) {
+    } else if (this.velocity.Magnitude() < this.maxSpeed) {
       this.velocity.Add(force);
     }
   }
@@ -93,10 +122,6 @@ class Ship {
     } else {
       this.isFillingBoostFuel = false;
     }
-  }
-
-  Reverse() {
-    this.Force(Math.PI);
   }
 
   SlowDown() {

@@ -16,9 +16,9 @@ const COLORS = [WHITE, GRAY, GREEN, BLUE, AQUA, PINK];
 const ANGLE_OFFSET = -Math.PI / 2;
 
 /* Frame */
-const FRAME_POS_X = 0;
+const FRAME_POS_X = 0.05 * window.innerWidth;
 const FRAME_POS_Y = 0;
-const FRAME_WIDTH = window.innerWidth * 1;
+const FRAME_WIDTH = window.innerWidth * 0.9;
 const FRAME_HEIGHT = window.innerHeight * 1;
 const FRAME_BORDER_WEIGHT = 0;
 
@@ -28,10 +28,13 @@ const STATS_POS_Y = 50;
 const LIFEBAR_WIDTH = 200;
 const LIFEBAR_HEIGHT = 25;
 
-/* SHIP */
+/* Ship */
+const SHIP_POS_X = window.innerWidth * 0.5;
+const SHIP_POS_Y = window.innerHeight * 0.95;
 const SHIP_RADIUS = 20;
-const SHIP_ACC = 0.2;
-const MAX_SPEED = 5;
+const SHIP_ACC = 0.3;
+const SHIP_BOOST_ACC = 0.5;
+const SHIP_MAX_SPEED = 5;
 const MAX_BOOST_SPEED = 7;
 const ROTATE_ACC = 0.1;
 const MAX_ROTATE = 1;

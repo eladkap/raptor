@@ -1,4 +1,4 @@
-var canvas = document.querySelector("canvas");
+var canvas = document.getElementById("main");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -26,14 +26,21 @@ window.addEventListener("keyup", KeyReleased);
 function KeyPressed(event) {}
 
 function KeyDown(event) {
-  if (event.key == "ArrowUp") {
+  if (event.key == "ArrowLeft") {
+    ship.SteerLeft();
     ship.SetAccelerating(true);
   }
   if (event.key == "ArrowRight") {
-    ship.SetRotation(ROTATE_ACC);
+    ship.SteerRight();
+    ship.SetAccelerating(true);
   }
-  if (event.key == "ArrowLeft") {
-    ship.SetRotation(-ROTATE_ACC);
+  if (event.key == "ArrowUp") {
+    ship.Forward();
+    ship.SetAccelerating(true);
+  }
+  if (event.key == "ArrowDown") {
+    ship.Reverse();
+    ship.SetAccelerating(true);
   }
   if (event.key == " ") {
     ship.FireBullet(ANGLE_OFFSET);
@@ -46,8 +53,7 @@ function KeyDown(event) {
 
 function KeyReleased(event) {
   ship.SetAccelerating(false);
-  ship.SetRotation(0);
-  ship.SlowDown();
+  ship.Stop();
 }
 
 /* END KEYBOARD EVENTS */
@@ -88,7 +94,7 @@ function CreateStats() {
 }
 
 function CreateShip() {
-  ship = new Ship(canvas.width / 2, canvas.height / 2, SHIP_RADIUS);
+  ship = new Ship(SHIP_POS_X, SHIP_POS_Y, SHIP_RADIUS);
 }
 
 function CreateBullets() {
@@ -153,7 +159,7 @@ function Setup() {
   CreateFrame();
   CreateStats();
   CreateShip();
-  CreateBubbles();
+  // CreateBubbles();
   CreateBullets();
 }
 
@@ -163,7 +169,7 @@ function Draw() {
   DrawFrame();
   DrawStats();
   DrawShip();
-  DrawBubbles();
+  // DrawBubbles();
   DrawBullets();
   RemoveBulletsOffscreen();
   CheckBulletBubbleCollision();
