@@ -1,15 +1,12 @@
-class Ship {
-  constructor(x, y, radius) {
-    this.pos = new Vector(x, y);
-    this.velocity = new Vector(0, 0);
-    this.radius = radius;
+class Raptor extends Aircraft {
+  constructor(x, y, radius, angle, health, shield) {
+    super(x, y, radius, angle, health, shield);
     this.rockets = [];
-    this.angle = 0;
     this.steer = new Vector(0, 0);
-    this.life = 100;
-    this.isAccelerating = false;
+    this.shield = shield;
     this.backColor = WHITE;
-    this.maxSpeed = SHIP_MAX_SPEED;
+    this.isAccelerating = false;
+    this.maxSpeed = RAPTOR_MAX_SPEED;
     this.boostMaxSpeed = MAX_BOOST_SPEED;
   }
 
@@ -84,7 +81,7 @@ class Ship {
 
   Force(a) {
     let force = new Vector(this.steer.x, this.steer.y);
-    // force.FromAngle(this.angle + a, SHIP_ACC);
+    // force.FromAngle(this.angle + a, RAPTOR_ACC);
     if (this.isBoosting && this.velocity.Magnitude() < this.boostMaxSpeed) {
       this.velocity.Add(force);
     } else if (this.velocity.Magnitude() < this.maxSpeed) {
@@ -126,7 +123,7 @@ class Ship {
 
   SlowDown() {
     if (this.velocity.Magnitude() > 0) {
-      this.velocity.Multiply(SHIP_FRICTION);
+      this.velocity.Multiply(RAPTOR_FRICTION);
     }
   }
 
@@ -148,6 +145,7 @@ class Ship {
     let v = new Vector(0, 0);
     v.FromAngle(this.angle + a, BULLET_SPEED);
     let bullet = new Bullet(
+      BULLET_DAMAGE,
       this.pos.x,
       this.pos.y,
       BULLET_RADIUS,
@@ -160,13 +158,45 @@ class Ship {
     }
   }
 
-  // FireRocket() {
-  //   let v = p5.Vector.fromAngle(this.angle, ROCKET_SPEED);
-  //   this.rockets.push(new Rocket(this.pos.x, this.pos.y, 1, v));
-  // }
+  FireRocket(a) {
+    let v = new Vector(0, 0);
+    v.FromAngle(this.angle + a, ROCKET_SPEED);
+    let sign = Math.random() < 0.5 ? 1 : -1;
+    let rocket = new Rocket(
+      ROCKET_DAMAGE,
+      this.pos.x + this.radius * sign,
+      this.pos.y,
+      ROCKET_WIDTH,
+      ROCKET_HEIGHT,
+      ROCKET_COLOR,
+      v
+    );
+    rockets.push(rocket);
+    if (ALLOW_SOUND) {
+      soundFire1.play();
+    }
+  }
 
   Collide(obj) {
     var d = dist(this.pos.x, this.pos.y, obj.pos.x, obj.pos.y);
     return d < this.radius / 2 + obj.radius;
+  }
+
+  Damage(amount) {
+    if (this.shield > 0) {
+      let diff = this.shield - amount;
+      if (diff >= 0) {
+        this.shield -= amount;
+      } else {
+        this.shield = 0;
+        this.live += diff;
+      }
+    } else {
+      this.live -= amount;
+    }
+    // Check if live is zero
+    if (this.live < 0) {
+      this.live = 0;
+    }
   }
 }

@@ -1,4 +1,4 @@
-class ProgressBar {
+class Bar {
   constructor(x, y, w, h, value) {
     this.pos = new Vector(x, y);
     this.width = w;

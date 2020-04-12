@@ -1,0 +1,24 @@
+{
+  "waves": [
+    {
+      "wave": 1,
+      "enemies": [
+        {
+          "type": "fighter",
+          "pos": "500,-50",
+          "velocity": "10,0"
+        },
+        {
+          "type": "fighter",
+          "pos": "500,-100",
+          "velocity": "10,0"
+        },
+        {
+          "type": "fighter",
+          "pos": "500,-150",
+          "velocity": "10,0"
+        }
+      ]
+    }
+  ]
+}

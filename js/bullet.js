@@ -1,5 +1,6 @@
-class Bullet {
-  constructor(x, y, radius, backColor, velocity) {
+class Bullet extends Weapon {
+  constructor(damage, x, y, radius, backColor, velocity) {
+    super(damage);
     this.pos = new Vector(x, y);
     this.radius = radius;
     this.velocity = velocity;

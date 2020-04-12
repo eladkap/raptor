@@ -9,12 +9,12 @@ var ctx = canvas.getContext("2d");
 var soundFire1;
 
 /* GLOBALS */
-var ship;
-var bubbles;
+var level;
+var raptor;
 var frame;
-var stats;
-var ship;
+var scoreBoard;
 var bullets;
+var rockets;
 var timeProgressBar;
 var statsBar;
 
@@ -23,37 +23,39 @@ window.addEventListener("keypress", KeyPressed);
 window.addEventListener("keydown", KeyDown);
 window.addEventListener("keyup", KeyReleased);
 
-function KeyPressed(event) {}
+function KeyPressed(event) {
+  if (event.key == "e") {
+    console.log("rocket");
+    raptor.FireRocket(ANGLE_OFFSET);
+  }
+}
 
 function KeyDown(event) {
   if (event.key == "ArrowLeft") {
-    ship.SteerLeft();
-    ship.SetAccelerating(true);
+    raptor.SteerLeft();
+    raptor.SetAccelerating(true);
   }
   if (event.key == "ArrowRight") {
-    ship.SteerRight();
-    ship.SetAccelerating(true);
+    raptor.SteerRight();
+    raptor.SetAccelerating(true);
   }
   if (event.key == "ArrowUp") {
-    ship.Forward();
-    ship.SetAccelerating(true);
+    raptor.Forward();
+    raptor.SetAccelerating(true);
   }
   if (event.key == "ArrowDown") {
-    ship.Reverse();
-    ship.SetAccelerating(true);
+    raptor.Reverse();
+    raptor.SetAccelerating(true);
   }
   if (event.key == " ") {
-    ship.FireBullet(ANGLE_OFFSET);
-  }
-  if (event.key == "d") {
-    console.log("Damage");
-    stats.DecreaseLife(5);
+    raptor.FireBullet(ANGLE_OFFSET);
+    // Sleep(BULLET_INTERVAL);
   }
 }
 
 function KeyReleased(event) {
-  ship.SetAccelerating(false);
-  ship.Stop();
+  raptor.SetAccelerating(false);
+  raptor.Stop();
 }
 
 /* END KEYBOARD EVENTS */
@@ -64,18 +66,13 @@ function LoadSounds() {
 }
 /* End Load sounds */
 
-function CreateBubbles(number) {
-  bubbles = [];
-  for (let i = 0; i < BUBBLES_NUM; i++) {
-    let radius = RandomOptions(BUBBLE_RADIUS_OPTIONS);
-    let x = RandomRange(frame.pos.x, frame.pos.x + frame.width);
-    let y = RandomRange(frame.pos.y, frame.pos.y + frame.height);
-    let speed = RandomRange(BUBBLE_MIN_SPEED, BUBBLE_MAX_SPEED);
-    let color = RandomColor();
-    let bubble = new Bubble(x, y, radius, speed, color);
-    bubbles.push(bubble);
-  }
+/* Load level */
+function LoadLevel() {
+  let levelText = ReadTextFile("levels/level001.txt");
+  let levelObj = JSON.parse(levelText);
+  console.log(levelObj);
 }
+/* End Load level */
 
 function CreateFrame() {
   frame = new Frame(
@@ -89,43 +86,46 @@ function CreateFrame() {
   );
 }
 
-function CreateStats() {
-  stats = new Stats(STATS_POS_X, STATS_POS_Y, ENEMIES);
+function CreateScoreBoard() {
+  scoreBoard = new ScoreBoard(STATS_POS_X, STATS_POS_Y, ENEMIES);
 }
 
-function CreateShip() {
-  ship = new Ship(SHIP_POS_X, SHIP_POS_Y, SHIP_RADIUS);
+function CreateRaptor() {
+  raptor = new Raptor(RAPTOR_POS_X, RAPTOR_POS_Y, RAPTOR_RADIUS, 0, 100, 0);
 }
 
 function CreateBullets() {
   bullets = [];
 }
 
-function DrawBubbles() {
-  bubbles.forEach((bubble) => {
-    bubble.Draw();
-    bubble.Update();
-    bubble.CheckEdges(frame);
-  });
+function CreateRockets() {
+  rockets = [];
 }
 
 function DrawFrame() {
   frame.Draw();
 }
 
-function DrawStats() {
-  stats.Draw();
+function DrawScoreBoard() {
+  scoreBoard.Draw();
 }
 
-function DrawShip() {
-  ship.Draw();
-  ship.Update();
+function DrawRaptor() {
+  raptor.Draw();
+  raptor.Update();
 }
 
 function DrawBullets() {
   for (let bullet of bullets) {
     bullet.Draw();
     bullet.Update();
+  }
+}
+
+function DrawRockets() {
+  for (let rocket of rockets) {
+    rocket.Draw();
+    rocket.Update();
   }
 }
 
@@ -137,18 +137,10 @@ function RemoveBulletsOffscreen() {
   }
 }
 
-function CheckBulletBubbleCollision() {
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    for (let j = bubbles.length - 1; j >= 0; j--) {
-      if (AreCollide(bullets[i], bubbles[j])) {
-        let bubble = bubbles.pop(j);
-        if (bubble.radius > BUBBLE_MIN_RADIUS) {
-          bubbles.splice(j, 1);
-        }
-        bubble.radius /= 2;
-        bullets.splice(i, 1);
-        return;
-      }
+function RemoveRocketsOffscreen() {
+  for (let i = 0; i < rockets.length; i++) {
+    if (rockets[i].toDestroy) {
+      rockets.splice(i, 1);
     }
   }
 }
@@ -156,23 +148,24 @@ function CheckBulletBubbleCollision() {
 /* MAIN */
 function Setup() {
   LoadSounds();
+  LoadLevel();
   CreateFrame();
-  CreateStats();
-  CreateShip();
-  // CreateBubbles();
+  CreateScoreBoard();
+  CreateRaptor();
   CreateBullets();
+  CreateRockets();
 }
 
 function Draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   requestAnimationFrame(Draw);
   DrawFrame();
-  DrawStats();
-  DrawShip();
-  // DrawBubbles();
+  DrawScoreBoard();
+  DrawRaptor();
   DrawBullets();
+  DrawRockets();
   RemoveBulletsOffscreen();
-  CheckBulletBubbleCollision();
+  RemoveRocketsOffscreen();
 }
 
 Setup();
