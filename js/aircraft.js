@@ -1,8 +1,6 @@
 class Aircraft extends Vehicle {
-  constructor(x, y, radius, angle, life) {
-    super(x, y, radius);
-    this.rockets = [];
-    this.angle = angle;
-    this.life = life;
+  constructor(x, y, speed, heading, health, altitude) {
+    super(x, y, speed, heading, health);
+    this.altitude = altitude;
   }
 }

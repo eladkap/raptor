@@ -39,9 +39,7 @@ const MAX_BOOST_SPEED = 10;
 const ROTATE_ACC = 0.1;
 const MAX_ROTATE = 1;
 const RAPTOR_FRICTION = 0.95;
-
-/* Enemies */
-const ENEMIES = 10;
+const RAPTOR_BACKCOLOR = WHITE;
 
 /* Bullet */
 const BULLET_SPEED = 20;

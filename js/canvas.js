@@ -10,6 +10,7 @@ var soundFire1;
 
 /* GLOBALS */
 var level;
+var levelData;
 var raptor;
 var frame;
 var scoreBoard;
@@ -24,7 +25,7 @@ window.addEventListener("keydown", KeyDown);
 window.addEventListener("keyup", KeyReleased);
 
 function KeyPressed(event) {
-  if (event.key == "e") {
+  if (event.key == " ") {
     console.log("rocket");
     raptor.FireRocket(ANGLE_OFFSET);
   }
@@ -68,9 +69,11 @@ function LoadSounds() {
 
 /* Load level */
 function LoadLevel() {
-  let levelText = ReadTextFile("levels/level001.txt");
-  let levelObj = JSON.parse(levelText);
-  console.log(levelObj);
+  let levelText = ReadTextFile("levels/level001.json");
+  levelData = JSON.parse(levelText);
+  level = new Level();
+  level.CreateFrom(levelData);
+  console.log(level);
 }
 /* End Load level */
 
@@ -87,11 +90,22 @@ function CreateFrame() {
 }
 
 function CreateScoreBoard() {
-  scoreBoard = new ScoreBoard(STATS_POS_X, STATS_POS_Y, ENEMIES);
+  scoreBoard = new ScoreBoard(STATS_POS_X, STATS_POS_Y, 0);
 }
 
 function CreateRaptor() {
-  raptor = new Raptor(RAPTOR_POS_X, RAPTOR_POS_Y, RAPTOR_RADIUS, 0, 100, 0);
+  //x, y, radius, speed, heading, health, altitude, shield
+  raptor = new Raptor(
+    RAPTOR_POS_X,
+    RAPTOR_POS_Y,
+    RAPTOR_RADIUS,
+    0,
+    0,
+    10000,
+    RAPTOR_RADIUS,
+    RAPTOR_BACKCOLOR,
+    100
+  );
 }
 
 function CreateBullets() {
@@ -158,7 +172,6 @@ function Setup() {
 
 function Draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  requestAnimationFrame(Draw);
   DrawFrame();
   DrawScoreBoard();
   DrawRaptor();
@@ -166,6 +179,7 @@ function Draw() {
   DrawRockets();
   RemoveBulletsOffscreen();
   RemoveRocketsOffscreen();
+  requestAnimationFrame(Draw);
 }
 
 Setup();

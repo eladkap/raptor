@@ -1,10 +1,19 @@
-class Raptor extends Aircraft {
-  constructor(x, y, radius, angle, health, shield) {
-    super(x, y, radius, angle, health, shield);
-    this.rockets = [];
+class Raptor extends Fighter {
+  constructor(
+    x,
+    y,
+    speed,
+    heading,
+    health,
+    altitude,
+    radius,
+    backcolor,
+    shield
+  ) {
+    super(x, y, speed, heading, health, altitude, radius, backcolor);
     this.steer = new Vector(0, 0);
+    this.velocity = new Vector(0, 0);
     this.shield = shield;
-    this.backColor = WHITE;
     this.isAccelerating = false;
     this.maxSpeed = RAPTOR_MAX_SPEED;
     this.boostMaxSpeed = MAX_BOOST_SPEED;
@@ -55,8 +64,7 @@ class Raptor extends Aircraft {
   }
 
   Stop() {
-    this.steer.x = 0;
-    this.steer.y = 0;
+    this.steer.Set(0, 0);
   }
 
   SteerLeft() {
@@ -142,8 +150,7 @@ class Raptor extends Aircraft {
   }
 
   FireBullet(a) {
-    let v = new Vector(0, 0);
-    v.FromAngle(this.angle + a, BULLET_SPEED);
+    let v = Vector.FromAngle(this.angle + a, BULLET_SPEED);
     let bullet = new Bullet(
       BULLET_DAMAGE,
       this.pos.x,
@@ -159,8 +166,8 @@ class Raptor extends Aircraft {
   }
 
   FireRocket(a) {
-    let v = new Vector(0, 0);
-    v.FromAngle(this.angle + a, ROCKET_SPEED);
+    // let v = new Vector(0, 0);
+    let v = Vector.FromAngle(this.angle + a, ROCKET_SPEED);
     let sign = Math.random() < 0.5 ? 1 : -1;
     let rocket = new Rocket(
       ROCKET_DAMAGE,

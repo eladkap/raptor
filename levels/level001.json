@@ -1,22 +1,61 @@
 {
   "waves": [
     {
-      "wave": 1,
+      "waveNum": 1,
+      "buidlings": [
+        {
+          "posx": 400,
+          "posy": -50,
+          "width": 100,
+          "height": 100,
+          "health": 100
+        }
+      ],
       "enemies": [
         {
           "type": "fighter",
-          "pos": "500,-50",
-          "velocity": "10,0"
+          "posx": 400,
+          "posy": -50,
+          "vx": 0,
+          "vy": 7,
+          "radius": 30,
+          "health": 100,
+          "color": "blue"
+        }
+      ]
+    },
+    {
+      "waveNum": 2,
+      "enemies": [
+        {
+          "type": "fighter",
+          "posx": 500,
+          "posy": -50,
+          "vx": 0,
+          "vy": 7,
+          "radius": 30,
+          "health": 100,
+          "color": "blue"
         },
         {
           "type": "fighter",
-          "pos": "500,-100",
-          "velocity": "10,0"
+          "posx": 500,
+          "posy": -100,
+          "vx": 0,
+          "vy": 7,
+          "radius": 30,
+          "health": 100,
+          "color": "blue"
         },
         {
           "type": "fighter",
-          "pos": "500,-150",
-          "velocity": "10,0"
+          "posx": 500,
+          "posy": -150,
+          "vx": 0,
+          "vy": 7,
+          "radius": 30,
+          "health": 100,
+          "color": "blue"
         }
       ]
     }
